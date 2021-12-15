@@ -33,4 +33,5 @@ def dataset_divide():
                 
         except:
             print('When try copy file {} to {}, unexpected error: {}'.format(src_path, dst_path, sys.exc_info()))
-        
+    
+dataset_divide()
