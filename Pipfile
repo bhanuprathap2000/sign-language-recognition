@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 pandas = "*"
+mediapipe = "*"
+tqdm = "*"
+joblib = "*"
+opencv-python = "*"
 
 [dev-packages]
 ipykernel = "*"
