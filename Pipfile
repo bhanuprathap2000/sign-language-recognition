@@ -11,6 +11,10 @@ joblib = "*"
 opencv-python = "*"
 scikit-learn = "*"
 tensorflow-gpu = "*"
+torch = "*"
+transformers = "*"
+xgboost = "*"
+timm = "*"
 
 [dev-packages]
 ipykernel = "*"
