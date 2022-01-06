@@ -9,6 +9,8 @@ mediapipe = "*"
 tqdm = "*"
 joblib = "*"
 opencv-python = "*"
+scikit-learn = "*"
+tensorflow-gpu = "*"
 
 [dev-packages]
 ipykernel = "*"
