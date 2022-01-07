@@ -5,7 +5,7 @@ import timm
 
 @dataclass
 class LstmConfig:
-    input_size: int = 134
+    input_size: int = 150
     hidden_size: int = 256
     num_layers: int = 5
     batch_first: bool = True
