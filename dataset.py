@@ -17,8 +17,8 @@ from augment import (
     downsample,
 )
 
-
-class KeypointsDataset(data.Dataset):
+import sys
+class  KeypointsDataset(data.Dataset):
     def __init__(
         self,
         keypoints_dir,
@@ -101,10 +101,15 @@ class KeypointsDataset(data.Dataset):
         )
         if self.mode == "train" and self.use_augs:
             df = self.augment(df)
+        
+
+        
+
+
 
         pose = (
             np.array(list(map(np.array, df.pose.values)))
-            .reshape(-1, 50)
+            .reshape(-1, 66)
             .astype(np.float32)
         )
         h1 = (
@@ -117,6 +122,10 @@ class KeypointsDataset(data.Dataset):
             .reshape(-1, 42)
             .astype(np.float32)
         )
+        # print("Pose",pose.shape)
+        # print("hand1",h1.shape)
+        # print("hand2",h2.shape)
+        # sys.exit(1)
         final_data = np.concatenate((pose, h1, h2), -1)
         final_data = np.pad(
             final_data,

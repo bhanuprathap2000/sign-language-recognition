@@ -33,7 +33,6 @@ def train(dataloader, model, optimizer, device):
     for batch in pbar:
         input_data = batch["data"].to(device)
         label = batch["label"].to(device)
-
         optimizer.zero_grad()
         preds = model(input_data)
         loss = F.cross_entropy(preds, label)
