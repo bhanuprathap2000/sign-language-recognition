@@ -109,9 +109,37 @@ class  KeypointsDataset(data.Dataset):
 
         pose = (
             np.array(list(map(np.array, df.pose.values)))
-            .reshape(-1, 66)
             .astype(np.float32)
         )
+        #
+        pose_shape=pose.shape
+        total_frame=pose_shape[0]
+        # print("total frame:",total_frame)
+        temp_total_shape=total_frame
+        # print("temp total shape:",temp_total_shape)
+
+        while (temp_total_shape*pose_shape[1]*pose_shape[2])%50!=0:
+            temp_total_shape+=1
+        pose=np.concatenate([pose,np.zeros((temp_total_shape-total_frame,33,2))])
+        # print("shape of pose",pose.shape)
+
+        #
+        pose=pose.reshape(-1,50)
+        new_pose=pose.shape[0]
+        # print("new shape",new_pose)
+        # print("total frame",total_frame)
+
+        n_rows=0
+        
+        while new_pose*50>total_frame*50:
+            n_rows+=1
+            new_pose-=1
+        
+        # print("new pose",new_pose)
+        # print("n_rows",n_rows)
+        pose=pose[:-n_rows,:]
+        # print("pose shape",pose.shape)
+        # sys.exit(1)
         h1 = (
             np.array(list(map(np.array, df.hand1.values)))
             .reshape(-1, 42)
