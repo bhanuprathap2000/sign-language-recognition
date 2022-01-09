@@ -15,9 +15,8 @@ import sys
 def process_landmarks(landmarks):
     x_list, y_list = [], []
 
-    if landmarks is None:
-        print("I am None")
-        sys.exit()
+    if landmarks.landmark is None:
+        return x_list, y_list
     for landmark in landmarks.landmark:
         x_list.append(landmark.x)
         y_list.append(landmark.y)
