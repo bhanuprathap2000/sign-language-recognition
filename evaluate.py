@@ -156,11 +156,6 @@ model = Transformer(config=config, n_classes=50)
 model = model.to(device)
 
 pretrained_model_name = "D:/final year project/sign-language-recognition/experimental_trained_models/transformer.pth"
-#comment for training
-# pretrained_model_links = load_json("pretrained_links.json")
-# if not os.path.isfile(pretrained_model_name):
-#     link = pretrained_model_links[pretrained_model_name]
-#     torch.hub.download_url_to_file(link, pretrained_model_name, progress=True)
 
 ckpt = torch.load(pretrained_model_name,map_location=torch.device('cpu'))
 model.load_state_dict(ckpt["model"])
