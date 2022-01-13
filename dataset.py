@@ -17,8 +17,8 @@ from augment import (
     downsample,
 )
 
-import sys
-class  KeypointsDataset(data.Dataset):
+
+class KeypointsDataset(data.Dataset):
     def __init__(
         self,
         keypoints_dir,
@@ -104,60 +104,19 @@ class  KeypointsDataset(data.Dataset):
 
         pose = (
             np.array(list(map(np.array, df.pose.values)))
+            .reshape(-1, 66)
             .astype(np.float32)
         )
-        #
-        pose_shape=pose.shape
-        old_total=pose_shape[0]*pose_shape[1]*pose_shape[2]
-        total_frame=pose_shape[0]
-        # print("total frame:",total_frame)
-        temp_total_shape=total_frame
-        # print("temp total shape:",temp_total_shape)
-
-        while (temp_total_shape*pose_shape[1]*pose_shape[2])%50!=0:
-            temp_total_shape+=1
-        pose=np.concatenate([pose,np.zeros((temp_total_shape-total_frame,33,2))])
-        
-        
-        # print("shape of pose",pose.shape)
-
-        #
-        pose=pose.reshape(-1,50)
-        new_total=pose.shape[0]*pose.shape[1]
-        new_pose=pose.shape[0]
-        # print("new shape",new_pose)
-        # print("total frame",total_frame)
-
-        n_rows=1
-        # print('new_total',new_total)
-        # print('old_total',old_total)
-        # print('diff',new_total-old_total)
-        while n_rows*50<(new_total-old_total):
-            n_rows+=1
-            new_pose-=1
-        
-        # print("new pose",new_pose)
-        # print("n_rows",n_rows)
-        pose=pose[:-n_rows,:]
-        # print("last pose shape",pose.shape)
-        # sys.exit(1)
-        
-        
         h1 = (
             np.array(list(map(np.array, df.hand1.values)))
-            .reshape(-1,42)
+            .reshape(-1, 42)
             .astype(np.float32)
         )
-        h1=np.concatenate([h1,np.zeros((pose.shape[0]-total_frame,42))])
         h2 = (
             np.array(list(map(np.array, df.hand2.values)))
             .reshape(-1, 42)
             .astype(np.float32)
         )
-        h2=np.concatenate([h2,np.zeros((pose.shape[0]-total_frame,42))])
-        # print(pose.shape)
-        # print(h1.shape,h2.shape)
-        # sys.exit(1)
         final_data = np.concatenate((pose, h1, h2), -1)
         final_data = np.pad(
             final_data,

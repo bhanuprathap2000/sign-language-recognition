@@ -10,13 +10,11 @@ from joblib import Parallel, delayed
 import numpy as np
 import gc
 import warnings
-import sys
 
 def process_landmarks(landmarks):
     x_list, y_list = [], []
-
-    if landmarks.landmark is None:
-        return x_list, y_list
+    if landmarks is None:
+        return x_list,y_list
     for landmark in landmarks.landmark:
         x_list.append(landmark.x)
         y_list.append(landmark.y)
@@ -73,9 +71,8 @@ def process_video(path, save_dir):
     hand1_points_x, hand1_points_y = [], []
     hand2_points_x, hand2_points_y = [], []
 
-    label = path.split("/")[-2]    
+    label = path.split("/")[-2]
     label = "".join([i for i in label if i.isalpha()]).lower()
-
     uid = os.path.splitext(os.path.basename(path))[0]
     uid = "_".join([label, uid])
     n_frames = 0
@@ -95,27 +92,31 @@ def process_video(path, save_dir):
         pose_x, pose_y = process_pose_keypoints(pose_results)
 
         ## Assign hands to correct positions
-        if len(hand1_x) > 0 and len(hand2_x) == 0:
-            if swap_hands(
-                left_wrist=(pose_x[15], pose_y[15]),
-                right_wrist=(pose_x[16], pose_y[16]),
-                hand=(hand1_x[0], hand1_y[0]),
-                input_hand="h1",
-            ):
-                hand1_x, hand1_y, hand2_x, hand2_y = hand2_x, hand2_y, hand1_x, hand1_y
+        try:
+          if len(hand1_x) > 0 and len(hand2_x) == 0:
+              if swap_hands(
+                  left_wrist=(pose_x[15], pose_y[15]),
+                  right_wrist=(pose_x[16], pose_y[16]),
+                  hand=(hand1_x[0], hand1_y[0]),
+                  input_hand="h1",
+              ):
+                  hand1_x, hand1_y, hand2_x, hand2_y = hand2_x, hand2_y, hand1_x, hand1_y
 
-        elif len(hand1_x) == 0 and len(hand2_x) > 0:
-            if swap_hands(
-                left_wrist=(pose_x[15], pose_y[15]),
-                right_wrist=(pose_x[16], pose_y[16]),
-                hand=(hand2_x[0], hand2_y[0]),
-                input_hand="h2",
-            ):
-                hand1_x, hand1_y, hand2_x, hand2_y = hand2_x, hand2_y, hand1_x, hand1_y
+          elif len(hand1_x) == 0 and len(hand2_x) > 0:
+              if swap_hands(
+                  left_wrist=(pose_x[15], pose_y[15]),
+                  right_wrist=(pose_x[16], pose_y[16]),
+                  hand=(hand2_x[0], hand2_y[0]),
+                  input_hand="h2",
+              ):
+                  hand1_x, hand1_y, hand2_x, hand2_y = hand2_x, hand2_y, hand1_x, hand1_y
+        except:
+          pass
+
 
         ## Set to nan so that values can be interpolated in dataloader
-        pose_x = pose_x if pose_x else [np.nan] * 25
-        pose_y = pose_y if pose_y else [np.nan] * 25
+        pose_x = pose_x if pose_x else [np.nan] * 33
+        pose_y = pose_y if pose_y else [np.nan] * 33
 
         hand1_x = hand1_x if hand1_x else [np.nan] * 21
         hand1_y = hand1_y if hand1_y else [np.nan] * 21
@@ -134,8 +135,8 @@ def process_video(path, save_dir):
     cap.release()
 
     ## Set to nan so that values can be interpolated in dataloader
-    pose_points_x = pose_points_x if pose_points_x else [[np.nan] * 25]
-    pose_points_y = pose_points_y if pose_points_y else [[np.nan] * 25]
+    pose_points_x = pose_points_x if pose_points_x else [[np.nan] * 33]
+    pose_points_y = pose_points_y if pose_points_y else [[np.nan] * 33]
 
     hand1_points_x = hand1_points_x if hand1_points_x else [[np.nan] * 21]
     hand1_points_y = hand1_points_y if hand1_points_y else [[np.nan] * 21]
@@ -215,7 +216,6 @@ if __name__ == "__main__":
     n_cores = multiprocessing.cpu_count()
     train_paths, val_paths, test_paths = load_train_test_val_paths(args)
 
-    # save_keypoints(args.dataset, train_paths, "train")
-    # save_keypoints(args.dataset, val_paths, "val")
+    save_keypoints(args.dataset, val_paths, "val")
     save_keypoints(args.dataset, test_paths, "test")
-                   
+    save_keypoints(args.dataset, train_paths, "train")

@@ -10,7 +10,6 @@ tqdm = "*"
 joblib = "*"
 opencv-python = "*"
 scikit-learn = "*"
-tensorflow-gpu = "*"
 torch = "*"
 transformers = "*"
 xgboost = "*"
@@ -20,4 +19,4 @@ timm = "*"
 ipykernel = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.7"
