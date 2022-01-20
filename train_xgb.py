@@ -16,7 +16,7 @@ from augment import (
     downsample,
 )
 from tqdm.auto import tqdm
-
+import glob
 
 def flatten(arr, max_seq_len=200):
     arr = np.array(arr)
@@ -87,7 +87,7 @@ def preprocess(df, use_augs, label_map, mode):
     feature_cols = ["pose_x", "pose_y", "hand1_x", "hand1_y", "hand2_x", "hand2_y"]
     x, y = [], []
     i = 0
-    no_of_videos = df.shape[0]
+    no_of_videos = df.shape[0]/9
     pbar = tqdm(total=no_of_videos, desc=f"Processing {mode} file....")
     while i < no_of_videos:
         if use_augs and mode == "train":
@@ -115,8 +115,8 @@ def preprocess(df, use_augs, label_map, mode):
 def load_dataframe(files):
     series = []
     for file_path in files:
-        series.append(pd.read_json(file_path, typ="series"))
-    return pd.concat(series, axis=0)
+      series.append(pd.read_json(file_path, typ="series"))
+    return pd.concat(series, axis=0,keys=range(675))
 
 
 def fit(args):
@@ -143,7 +143,7 @@ def fit(args):
     model.fit(x_train, y_train, x_val, y_val)
 
     exp_name = get_experiment_name(args)
-    save_path = os.path.join(args.save_dir, exp_name, ".pickle.dat")
+    save_path = os.path.join(args.save_path, exp_name+ ".pickle.dat")
     model.save(save_path)
 
 
@@ -162,7 +162,7 @@ def evaluate(args):
     exp_name = get_experiment_name(args)
     config = XgbConfig()
     model = Xgboost(config=config)
-    load_path = os.path.join(args.save_dir, exp_name, ".pickle.dat")
+    load_path = os.path.join(args.save_path, exp_name+ ".pickle.dat")
     model.load(load_path)
     print("### Model loaded ###")
 
