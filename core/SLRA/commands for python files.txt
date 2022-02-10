@@ -1,0 +1,9 @@
+python new_key_points_generate_keypoints.py --include_dir "D:/final year project/dataset_include50/" --save_dir "D:/final year project/sign-language-recognition/allkeypoints/" --dataset "include50"
+
+python runner.py --dataset "include50" --use_augs --model "lstm" --data_dir "D:/final year project/sign-language-recognition/allkeypoints/" --save_dir "D:/final year project/sign-language-recognition/trained_models/"
+
+usage: runner.py [-h] [--seed SEED] [--dataset DATASET] [--use_augs] [--use_cnn] [--model MODEL] --data_dir DATA_DIR
+                 [--save_path SAVE_PATH] [--epochs EPOCHS] [--batch_size BATCH_SIZE] [--learning_rate LEARNING_RATE]
+                 [--transformer_size TRANSFORMER_SIZE] [--use_pretrained USE_PRETRAINED]
+
+                 python runner.py --dataset "include50"  --data_dir "D:/final year project/sign-language-recognition/allkeypoints/" --save_path "D:/final year project/sign-language-recognition/trained_models/"
