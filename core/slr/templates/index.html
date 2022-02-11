@@ -4,7 +4,7 @@
         <title>Django - Sign Video Upload and predict </title>
     </head>
     <body>
-        <h1 style="text-align:center">Know the Sign</h1><p style="text-align:center">Sign Language Recognition</p>
+        <h1 style="text-align:center">Know The Sign</h1><p style="text-align:center">Sign Language Recognition</p>
 		<div style="width: 500px; margin: auto;">
 			<fieldset name="Video File Upload and Display">
 				{% if msg %} {% autoescape off %} {{ msg }} {% endautoescape %} {% endif %}
@@ -17,7 +17,7 @@
 						</p>
 					</dl>
 					<p>
-						<input type="submit" value="Upload and Display">
+						<input type="submit" value="Upload and Display and Predict">
 					</p>
 				</form>
 			</fieldset>
@@ -32,9 +32,9 @@
 
 			{% if data %}
 
-			<div>
-				{{data}}
-			</div>
+			<h2>
+				Predicted sign is <strong>{{data.predicted_label}}</strong>
+			</h2>
 
 			{% endif %}
 		</div>	

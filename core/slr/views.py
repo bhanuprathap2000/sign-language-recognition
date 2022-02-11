@@ -13,7 +13,7 @@ def upload_display_video(request):
             #write the code to predict the sign in video
             prediction_data=get_video_and_predict(f"D:/final year project/SLR/core/{file.name}")
 
-            return render(request, "index.html", {'filename': file.name,"data":prediction_data})
+            return render(request, "index.html", {'filename': file.name,"data":prediction_data[0]})
     else:
         form = UploadFileForm()
     return render(request, 'index.html', {'form': form})
