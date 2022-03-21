@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  background-image: url("wp6.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+   max-width: 100%;
+   max-height: 100%;
+}
+
+h1{
+  font-family: 'Dosis', sans-serif;
+  padding-top: 40px;
+  text-align:center;
+  font-size: 39px;
+  background: -webkit-linear-gradient(#BB2205,#FF5403 , #F0A500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: saturate(2);
+}
+
+#sub-head{
+  text-align:center;
+  font-size: 23px;
+  font-family: 'Dosis', sans-serif;
+  background: -webkit-linear-gradient(#00ff00,#00ff40);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.05rem;
+}
+
+
+.container2{
+   position: relative;
+  top:100px;
+  left: 31%; 
+  text-align: center; 
+  position: relative;
+  width: 500px;
+  height: 180px;
+  border-radius: 13px;
+  border-color: #45a2d4;
+  border-width: 3px;
+  border-style: solid;
+   
+  
+  box-shadow: 2px 2px 30px  blue, -2px -2px 8px whitesmoke;  
+
+/* box-shadow: 1px 1px 10px  #00d4ff, -1px -1px 10px #00ff6a;  */
+}
+
+p{
+  color: white;
+}
+
+.label{
+  font-family: 'Raleway', sans-serif;
+  color: #F76E11;
+}
+
+.file-choose{
+ padding: 10px 0 10px 85px;
+}
