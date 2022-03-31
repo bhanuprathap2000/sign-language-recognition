@@ -8,7 +8,7 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 from torch.utils import data
-from SLRA.generate_keypoints import process_video
+from SLRA.generate_keypoints_test import process_video
 from SLRA.models import Transformer
 from SLRA.configs import TransformerConfig
 from SLRA.utils import load_json, load_label_map
@@ -19,12 +19,12 @@ import shutil
 class KeypointsDataset(data.Dataset):
     def __init__(
         self,
-        keypoints_dir,
+        test_data,
         max_frame_len=200,
         frame_length=1080,
         frame_width=1920,
     ):
-        self.files = sorted(glob.glob(os.path.join(keypoints_dir, "*.json")))
+        self.files = test_data
         self.max_frame_len = max_frame_len
         self.frame_length = frame_length
         self.frame_width = frame_width
@@ -57,14 +57,10 @@ class KeypointsDataset(data.Dataset):
         return np.concatenate((x, y), -1).astype(np.float32)
 
     def __getitem__(self, idx):
-        file_path = self.files[idx]
-        row = pd.read_json(file_path, typ="series")
-        label = row.label
-        label = "".join([i for i in label if i.isalpha()]).lower()
-
-        pose = self.combine_xy(row.pose_x, row.pose_y)
-        h1 = self.combine_xy(row.hand1_x, row.hand1_y)
-        h2 = self.combine_xy(row.hand2_x, row.hand2_y)
+        row = self.files
+        pose = self.combine_xy(row["pose_x"], row["pose_y"])
+        h1 = self.combine_xy(row["hand1_x"], row["hand1_y"])
+        h2 = self.combine_xy(row["hand2_x"], row["hand2_y"])
 
         pose = self.interpolate(pose)
         h1 = self.interpolate(h1)
@@ -72,11 +68,9 @@ class KeypointsDataset(data.Dataset):
 
         df = pd.DataFrame.from_dict(
             {
-                "uid": row.uid,
                 "pose": pose.tolist(),
                 "hand1": h1.tolist(),
                 "hand2": h2.tolist(),
-                "label": label,
             }
         )
 
@@ -102,7 +96,6 @@ class KeypointsDataset(data.Dataset):
             "constant",
         )
         return {
-            "uid": row.uid,
             "data": torch.FloatTensor(final_data),
         }
 
@@ -119,21 +112,16 @@ def inference(dataloader, model, device, label_map):
         input_data = batch["data"].to(device)
         output = model(input_data).detach().cpu()
         output = torch.argmax(torch.softmax(output, dim=-1), dim=-1).numpy()
-        predictions.append({"uid": batch["uid"][0], "predicted_label": label_map[output[0]]})
+        predictions.append({"predicted_label": label_map[output[0]]})
 
     return predictions
 
 
 def get_video_and_predict(video_path):
-    save_dir = "keypoints_dir"
-    if os.path.isdir(save_dir):
-        shutil.rmtree(save_dir)
-    os.mkdir(save_dir)
-    process_video(video_path, save_dir)
-
+    test_data=process_video(video_path)
     label_map = load_label_map("include50")
     dataset = KeypointsDataset(
-        keypoints_dir=save_dir,
+        test_data=test_data,
         max_frame_len=169,
     )
 
